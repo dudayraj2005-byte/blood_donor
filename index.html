@@ -14,8 +14,6 @@
 
 <body>
 
-<!-- ================= HEADER ================= -->
-
 <header class="header">
 
 <div class="logo">🩸 BloodConnect</div>
@@ -27,13 +25,10 @@
 <a href="#tracking">Tracking</a>
 </nav>
 
-<button class="login">Login</button>
+<button class="login" onclick="openLogin()">Login</button>
 
 </header>
 
-
-
-<!-- ================= HERO ================= -->
 
 <section class="hero">
 
@@ -53,49 +48,43 @@
 <option>AB-</option>
 </select>
 
-<input id="city" type="text" placeholder="Enter City">
+<input id="city" placeholder="Enter City">
 
-<button id="searchBtn">Search Donor</button>
+<button id="searchBtn">Search</button>
 
 </div>
 
 </section>
 
-
-
-<!-- ================= SERVICES ================= -->
 
 <section class="services">
 
 <div class="card">
 <h3>Register as Donor</h3>
 <p>Save lives by donating blood</p>
-<button id="registerBtn">Register</button>
+<button onclick="openLogin()">Register</button>
 </div>
 
 <div class="card">
 <h3>Emergency Request</h3>
 <p>Find urgent donors instantly</p>
-<button id="emergencyBtn">Request</button>
+<button onclick="alert('Emergency request feature coming soon')">Request</button>
 </div>
 
 <div class="card">
 <h3>Nearby Hospitals</h3>
 <p>View hospitals on map</p>
-<button id="hospitalBtn">Show Hospitals</button>
+<button onclick="showHospitals()">Show</button>
 </div>
 
 <div class="card">
 <h3>Track Blood</h3>
 <p>Track blood shipment</p>
-<button id="trackBtn">Track</button>
+<button onclick="startTracking()">Track</button>
 </div>
 
 </section>
 
-
-
-<!-- ================= QUICK BLOOD SEARCH ================= -->
 
 <section class="blood-section">
 
@@ -117,60 +106,61 @@
 </section>
 
 
-
-<!-- ================= TRACKING ================= -->
-
-<section class="tracking-section" id="tracking">
+<section id="tracking">
 
 <h2>Live Blood Transport Map</h2>
 
-<div class="tracking-controls">
+<input id="hospitalInput" placeholder="Enter Hospital Name">
 
-<input id="hospitalInput" type="text" placeholder="Enter Hospital Name">
+<button onclick="setHospital()">Set Hospital</button>
 
-<button id="setHospitalBtn">Set Hospital</button>
-
-<button id="startTrackingBtn">Start Tracking</button>
+<button onclick="startTracking()">Start Tracking</button>
 
 <p id="trackingStatus"></p>
-
-</div>
 
 <div id="map"></div>
 
 </section>
 
 
-
-<!-- ================= DONOR RESULTS ================= -->
-
-<section class="results-section">
+<section>
 
 <h2>Available Donors</h2>
 
-<div id="donorResults">
-
-<p>Search donors to see results.</p>
-
-</div>
+<div id="donorResults"></div>
 
 </section>
 
 
-
-<!-- ================= FOOTER ================= -->
-
 <footer>
-
 <p>© 2026 BloodConnect Portal</p>
-
 </footer>
 
 
+<!-- LOGIN REGISTER MODAL -->
 
-<!-- ================= JAVASCRIPT ================= -->
+<div id="authModal" class="auth-modal">
 
-<script src="script.js" defer></script>
+<div class="auth-box">
+
+<h2>Login / Register</h2>
+
+<input id="authName" placeholder="Name">
+<input id="authPhone" placeholder="Phone">
+<input id="authBlood" placeholder="Blood Group">
+<input id="authCity" placeholder="City">
+
+<button onclick="registerUser()">Register</button>
+<button onclick="loginUser()">Login</button>
+
+<button onclick="closeAuth()">Close</button>
+
+</div>
+
+</div>
+
+
+<script src="script.js"></script>
 
 <script
 src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"
