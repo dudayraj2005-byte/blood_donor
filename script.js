@@ -1,37 +1,45 @@
-const API="http://127.0.0.1:5000"
+const API = "http://127.0.0.1:5000"
 
 let map
 let vehicleMarker
+let donorMarkers = []
+let hospitalMarkers = []
 
 
+
+/* ================= MAP INIT ================= */
 
 function initMap(){
 
-map=new google.maps.Map(document.getElementById("map"),{
-
-center:{lat:17.385, lng:78.4867},
+map = new google.maps.Map(document.getElementById("map"),{
+center:{lat:17.385,lng:78.4867},
 zoom:12
-
 })
 
 }
 
 
-/* SEARCH DONORS */
+
+/* ================= SEARCH DONORS ================= */
 
 async function searchDonors(){
 
-let blood=document.getElementById("blood-group").value
-let city=document.getElementById("city").value
+let blood = document.getElementById("blood-group").value
+let city = document.getElementById("city").value
 
-let res=await fetch(API+`/search?blood=${blood}&city=${city}`)
-let data=await res.json()
+let res = await fetch(API + `/search?blood=${blood}&city=${city}`)
+let data = await res.json()
 
 let html=""
 
+/* clear old markers */
+
+donorMarkers.forEach(m=>m.setMap(null))
+donorMarkers=[]
+
 data.forEach(d=>{
 
-html+=`
+html += `
 
 <div class="donor-card">
 
@@ -44,25 +52,44 @@ html+=`
 
 `
 
+/* OPTIONAL donor marker if coordinates exist */
+
+if(d.lat && d.lng){
+
+let marker = new google.maps.Marker({
+
+position:{lat:d.lat,lng:d.lng},
+map:map,
+title:d.name,
+icon:"https://maps.google.com/mapfiles/ms/icons/green-dot.png"
+
 })
 
-document.getElementById("donorResults").innerHTML=html
+donorMarkers.push(marker)
+
+}
+
+})
+
+document.getElementById("donorResults").innerHTML = html
 
 }
 
 
 
-document.getElementById("searchBtn").onclick=searchDonors
+/* SEARCH BUTTON */
+
+document.getElementById("searchBtn").onclick = searchDonors
 
 
 
-/* BLOOD QUICK SEARCH */
+/* ================= QUICK BLOOD SEARCH ================= */
 
 document.querySelectorAll(".blood").forEach(b=>{
 
-b.onclick=()=>{
+b.onclick = ()=>{
 
-document.getElementById("blood-group").value=b.innerText
+document.getElementById("blood-group").value = b.innerText
 searchDonors()
 
 }
@@ -71,9 +98,14 @@ searchDonors()
 
 
 
-/* HOSPITAL MAP MARKERS */
+/* ================= SHOW HOSPITALS ================= */
 
 function showHospitals(){
+
+/* remove old hospital markers */
+
+hospitalMarkers.forEach(m=>m.setMap(null))
+hospitalMarkers=[]
 
 let hospitals=[
 
@@ -86,7 +118,7 @@ let hospitals=[
 
 hospitals.forEach(h=>{
 
-new google.maps.Marker({
+let marker = new google.maps.Marker({
 
 position:{lat:h.lat,lng:h.lng},
 map:map,
@@ -95,15 +127,19 @@ icon:"https://maps.google.com/mapfiles/ms/icons/red-dot.png"
 
 })
 
+hospitalMarkers.push(marker)
+
 })
 
 }
 
 
 
-/* BLOOD TRANSPORT TRACKING */
+/* ================= BLOOD TRANSPORT TRACKING ================= */
 
 function startTracking(){
+
+document.getElementById("trackingStatus").innerText = "Blood transport started..."
 
 let path=[
 
@@ -115,27 +151,41 @@ let path=[
 
 ]
 
-let i=0
+let i = 0
 
-vehicleMarker=new google.maps.Marker({
+/* remove old vehicle */
+
+if(vehicleMarker){
+vehicleMarker.setMap(null)
+}
+
+vehicleMarker = new google.maps.Marker({
 
 position:path[0],
 map:map,
 title:"Blood Transport",
-icon:"https://maps.google.com/mapfiles/ms/icons/ambulance.png"
+icon:"https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
 
 })
 
-setInterval(()=>{
 
-if(i<path.length){
+let move = setInterval(()=>{
+
+if(i < path.length){
 
 vehicleMarker.setPosition(path[i])
 map.panTo(path[i])
 i++
 
+}else{
+
+clearInterval(move)
+
+document.getElementById("trackingStatus").innerText =
+"Blood delivered to hospital."
+
 }
 
-},3000)
+},2000)
 
 }
