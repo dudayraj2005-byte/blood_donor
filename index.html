@@ -14,7 +14,6 @@
 
 <body>
 
-
 <!-- ================= HEADER ================= -->
 
 <header class="header">
@@ -54,9 +53,9 @@
 <option>AB-</option>
 </select>
 
-<input id="city" placeholder="Enter City">
+<input id="city" type="text" placeholder="Enter City">
 
-<button id="searchBtn">Search</button>
+<button id="searchBtn">Search Donor</button>
 
 </div>
 
@@ -83,20 +82,20 @@
 <div class="card">
 <h3>Nearby Hospitals</h3>
 <p>View hospitals on map</p>
-<button onclick="showHospitals()">Show</button>
+<button id="hospitalBtn">Show Hospitals</button>
 </div>
 
 <div class="card">
 <h3>Track Blood</h3>
 <p>Track blood shipment</p>
-<button onclick="startTracking()">Track</button>
+<button id="trackBtn">Track</button>
 </div>
 
 </section>
 
 
 
-<!-- ================= BLOOD QUICK SEARCH ================= -->
+<!-- ================= QUICK BLOOD SEARCH ================= -->
 
 <section class="blood-section">
 
@@ -127,11 +126,11 @@
 
 <div class="tracking-controls">
 
-<input id="hospitalInput" placeholder="Enter Hospital Name">
+<input id="hospitalInput" type="text" placeholder="Enter Hospital Name">
 
-<button onclick="setHospital()">Set Hospital</button>
+<button id="setHospitalBtn">Set Hospital</button>
 
-<button onclick="startTracking()">Start Tracking</button>
+<button id="startTrackingBtn">Start Tracking</button>
 
 <p id="trackingStatus"></p>
 
@@ -149,9 +148,9 @@
 
 <h2>Available Donors</h2>
 
-<div id="donorResults" class="donor-results">
+<div id="donorResults">
 
-<p>Search donors to see results...</p>
+<p>Search donors to see results.</p>
 
 </div>
 
@@ -162,18 +161,23 @@
 <!-- ================= FOOTER ================= -->
 
 <footer>
+
 <p>© 2026 BloodConnect Portal</p>
+
 </footer>
 
 
 
-<!-- ================= SCRIPTS ================= -->
+<!-- ================= JAVASCRIPT ================= -->
 
-<script src="script.js"></script>
+<script src="script.js" defer></script>
 
-<script async defer
-src="https://maps.googleapis.com/maps/api/js?key=AIzaSyXXXXXXX&callback=initMap">
+<script
+src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"
+async
+defer>
 </script>
 
 </body>
+
 </html>
