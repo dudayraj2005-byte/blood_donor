@@ -1,37 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>BloodConnect | Blood Donor Portal</title>
+<title>BloodConnect Portal</title>
 
 <link rel="stylesheet" href="style.css">
 
 </head>
 
-
 <body>
-
-
-<!-- ================= HEADER ================= -->
 
 <header class="header">
 
-<div class="logo">
-🩸 BloodConnect
-</div>
+<div class="logo">🩸 BloodConnect</div>
 
 <nav class="nav">
-
-<a href="#search">Find Donor</a>
-<a href="#register">Register Donor</a>
-<a href="#hospitals">Hospitals</a>
-<a href="#emergency">Emergency</a>
-<a href="#tracking">Live Tracking</a>
-
+<a href="#">Find Donor</a>
+<a href="#">Register</a>
+<a href="#">Hospitals</a>
+<a href="#">Tracking</a>
 </nav>
 
 <button class="login">Login</button>
@@ -39,19 +29,14 @@
 </header>
 
 
-
-<!-- ================= HERO SECTION ================= -->
-
-<section class="hero" id="search">
+<section class="hero">
 
 <h1>Find Blood Donors Near You</h1>
 
 <div class="search-box">
 
 <select id="blood-group">
-
 <option value="">Select Blood Group</option>
-
 <option>A+</option>
 <option>A-</option>
 <option>B+</option>
@@ -60,75 +45,51 @@
 <option>O-</option>
 <option>AB+</option>
 <option>AB-</option>
-
 </select>
 
-<input type="text" id="city" placeholder="Enter City">
+<input id="city" placeholder="Enter City">
 
-<button id="searchBtn">Search Donor</button>
+<button id="searchBtn">Search</button>
 
 </div>
 
 </section>
 
 
-
-<!-- ================= SERVICES ================= -->
 
 <section class="services">
 
-<div class="card" id="register">
-
+<div class="card">
 <h3>Register as Donor</h3>
-
 <p>Save lives by donating blood</p>
-
 <button id="registerBtn">Register</button>
-
 </div>
-
-
-<div class="card" id="emergency">
-
-<h3>Emergency Request</h3>
-
-<p>Find urgent donors instantly</p>
-
-<button id="emergencyBtn">Request Blood</button>
-
-</div>
-
-
-<div class="card" id="hospitals">
-
-<h3>Nearby Hospitals</h3>
-
-<p>View blood banks nearby</p>
-
-<button id="hospitalBtn">View Hospitals</button>
-
-</div>
-
 
 <div class="card">
+<h3>Emergency Request</h3>
+<p>Find urgent donors instantly</p>
+<button id="emergencyBtn">Request</button>
+</div>
 
-<h3>Donation Camps</h3>
+<div class="card">
+<h3>Nearby Hospitals</h3>
+<p>View hospitals on map</p>
+<button onclick="showHospitals()">Show</button>
+</div>
 
-<p>Check upcoming camps</p>
-
-<button>Explore</button>
-
+<div class="card">
+<h3>Track Blood</h3>
+<p>Track blood shipment</p>
+<button onclick="startTracking()">Track</button>
 </div>
 
 </section>
 
 
 
-<!-- ================= BLOOD GROUP SECTION ================= -->
-
 <section class="blood-section">
 
-<h2>Search by Blood Group</h2>
+<h2>Quick Blood Search</h2>
 
 <div class="blood-grid">
 
@@ -147,13 +108,9 @@
 
 
 
-<!-- ================= LIVE BLOOD TRACKING ================= -->
+<section class="tracking-section">
 
-<section class="tracking-section" id="tracking">
-
-<h2>Live Blood Transport Tracking</h2>
-
-<p>Track blood delivery from blood bank to hospital in real time</p>
+<h2>Live Blood Transport Map</h2>
 
 <div id="map"></div>
 
@@ -161,36 +118,26 @@
 
 
 
-<!-- ================= SEARCH RESULTS ================= -->
-
 <section class="results-section">
 
 <h2>Available Donors</h2>
 
-<div id="donorResults">
-
-<!-- donors will appear here dynamically -->
-
-</div>
+<div id="donorResults"></div>
 
 </section>
 
 
 
-<!-- ================= FOOTER ================= -->
-
 <footer>
-
-<p>© 2026 BloodConnect Portal</p>
-
+<p>© 2026 BloodConnect</p>
 </footer>
 
 
-
-<!-- ================= JAVASCRIPT ================= -->
-
 <script src="script.js"></script>
 
-</body>
+<script async defer
+src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_API_KEY&callback=initMap">
+</script>
 
+</body>
 </html>
