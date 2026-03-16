@@ -1,147 +1,141 @@
-// ================= API =================
+const API="http://127.0.0.1:5000"
 
-const API = "http://127.0.0.1:5000";
+let map
+let vehicleMarker
 
 
-// ================= REGISTER DONOR =================
 
-async function register(){
+function initMap(){
 
-try{
+map=new google.maps.Map(document.getElementById("map"),{
 
-let data = {
-name: document.getElementById("name").value,
-age: document.getElementById("age").value,
-blood_group: document.getElementById("blood-group").value,
-city: document.getElementById("city").value,
-phone: document.getElementById("phone").value,
-last_donation: document.getElementById("last").value
-}
+center:{lat:17.385, lng:78.4867},
+zoom:12
 
-let res = await fetch(API + "/register",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body: JSON.stringify(data)
 })
 
-let result = await res.json()
-
-alert(result.message || "Donor registered successfully")
-
-}catch(err){
-
-alert("Registration failed")
-
-}
-
 }
 
 
-
-// ================= SEARCH DONORS =================
+/* SEARCH DONORS */
 
 async function searchDonors(){
 
-try{
+let blood=document.getElementById("blood-group").value
+let city=document.getElementById("city").value
 
-let blood = document.getElementById("blood-group").value
-let city = document.getElementById("city").value
+let res=await fetch(API+`/search?blood=${blood}&city=${city}`)
+let data=await res.json()
 
-let res = await fetch(API + `/search?blood=${blood}&city=${city}`)
-let data = await res.json()
+let html=""
 
-let html = ""
+data.forEach(d=>{
 
-if(data.length === 0){
+html+=`
 
-html = "<p>No donors found</p>"
-
-}else{
-
-data.forEach(d => {
-
-html += `
 <div class="donor-card">
 
 <h3>${d.name}</h3>
-
-<p><strong>Blood:</strong> ${d.blood_group}</p>
-<p><strong>City:</strong> ${d.city}</p>
-<p><strong>Phone:</strong> ${d.phone}</p>
+<p>Blood: ${d.blood_group}</p>
+<p>City: ${d.city}</p>
+<p>Phone: ${d.phone}</p>
 
 </div>
+
 `
 
 })
 
-}
-
-document.getElementById("donorResults").innerHTML = html
-
-}catch(err){
-
-console.error(err)
-
-}
+document.getElementById("donorResults").innerHTML=html
 
 }
 
 
 
-// ================= BLOOD GROUP QUICK SEARCH =================
+document.getElementById("searchBtn").onclick=searchDonors
 
-document.querySelectorAll(".blood").forEach(group => {
 
-group.addEventListener("click", () => {
 
-let blood = group.innerText
+/* BLOOD QUICK SEARCH */
 
-document.getElementById("blood-group").value = blood
+document.querySelectorAll(".blood").forEach(b=>{
 
+b.onclick=()=>{
+
+document.getElementById("blood-group").value=b.innerText
 searchDonors()
 
-})
+}
 
 })
 
 
 
-// ================= SEARCH BUTTON =================
+/* HOSPITAL MAP MARKERS */
 
-document.getElementById("searchBtn").addEventListener("click", () => {
+function showHospitals(){
 
-searchDonors()
+let hospitals=[
 
-})
+{lat:17.385,lng:78.486,name:"City Hospital"},
+{lat:17.401,lng:78.470,name:"Red Cross Blood Bank"},
+{lat:17.368,lng:78.490,name:"Apollo Hospital"},
+{lat:17.392,lng:78.450,name:"Care Hospital"}
 
+]
 
+hospitals.forEach(h=>{
 
-// ================= EMERGENCY BUTTON =================
+new google.maps.Marker({
 
-document.getElementById("emergencyBtn").addEventListener("click", () => {
-
-alert("Emergency request sent. Nearby donors will be notified.")
-
-})
-
-
-
-// ================= HOSPITAL BUTTON =================
-
-document.getElementById("hospitalBtn").addEventListener("click", () => {
-
-alert("Hospital list feature coming soon.")
+position:{lat:h.lat,lng:h.lng},
+map:map,
+title:h.name,
+icon:"https://maps.google.com/mapfiles/ms/icons/red-dot.png"
 
 })
 
+})
+
+}
 
 
-// ================= REGISTER BUTTON =================
 
-document.getElementById("registerBtn").addEventListener("click", () => {
+/* BLOOD TRANSPORT TRACKING */
 
-alert("Donor registration form will open.")
+function startTracking(){
+
+let path=[
+
+{lat:17.385,lng:78.486},
+{lat:17.386,lng:78.480},
+{lat:17.388,lng:78.475},
+{lat:17.390,lng:78.470},
+{lat:17.392,lng:78.465}
+
+]
+
+let i=0
+
+vehicleMarker=new google.maps.Marker({
+
+position:path[0],
+map:map,
+title:"Blood Transport",
+icon:"https://maps.google.com/mapfiles/ms/icons/ambulance.png"
 
 })
+
+setInterval(()=>{
+
+if(i<path.length){
+
+vehicleMarker.setPosition(path[i])
+map.panTo(path[i])
+i++
+
+}
+
+},3000)
+
+}
