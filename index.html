@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
 <meta charset="UTF-8">
@@ -13,6 +14,9 @@
 
 <body>
 
+
+<!-- ================= HEADER ================= -->
+
 <header class="header">
 
 <div class="logo">🩸 BloodConnect</div>
@@ -21,13 +25,16 @@
 <a href="#">Find Donor</a>
 <a href="#">Register</a>
 <a href="#">Hospitals</a>
-<a href="#">Tracking</a>
+<a href="#tracking">Tracking</a>
 </nav>
 
 <button class="login">Login</button>
 
 </header>
 
+
+
+<!-- ================= HERO ================= -->
 
 <section class="hero">
 
@@ -56,6 +63,8 @@
 </section>
 
 
+
+<!-- ================= SERVICES ================= -->
 
 <section class="services">
 
@@ -87,6 +96,8 @@
 
 
 
+<!-- ================= BLOOD QUICK SEARCH ================= -->
+
 <section class="blood-section">
 
 <h2>Quick Blood Search</h2>
@@ -108,9 +119,23 @@
 
 
 
-<section class="tracking-section">
+<!-- ================= TRACKING ================= -->
+
+<section class="tracking-section" id="tracking">
 
 <h2>Live Blood Transport Map</h2>
+
+<div class="tracking-controls">
+
+<input id="hospitalInput" placeholder="Enter Hospital Name">
+
+<button onclick="setHospital()">Set Hospital</button>
+
+<button onclick="startTracking()">Start Tracking</button>
+
+<p id="trackingStatus"></p>
+
+</div>
 
 <div id="map"></div>
 
@@ -118,20 +143,31 @@
 
 
 
+<!-- ================= DONOR RESULTS ================= -->
+
 <section class="results-section">
 
 <h2>Available Donors</h2>
 
-<div id="donorResults"></div>
+<div id="donorResults" class="donor-results">
+
+<p>Search donors to see results...</p>
+
+</div>
 
 </section>
 
 
 
+<!-- ================= FOOTER ================= -->
+
 <footer>
-<p>© 2026 BloodConnect</p>
+<p>© 2026 BloodConnect Portal</p>
 </footer>
 
+
+
+<!-- ================= SCRIPTS ================= -->
 
 <script src="script.js"></script>
 
