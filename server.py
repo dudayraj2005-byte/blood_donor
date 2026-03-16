@@ -1,60 +1,21 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from flask import Flask,request,jsonify
 import sqlite3
+from flask_cors import CORS
 
-app = Flask(__name__)
+app=Flask(__name__)
 CORS(app)
 
-DATABASE = "bloodconnect.db"
 
-
-# ================= DATABASE INIT =================
-
-def init_db():
-    conn = sqlite3.connect(DATABASE)
-    cur = conn.cursor()
-
-    cur.execute("""
-    CREATE TABLE IF NOT EXISTS donors(
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        age INTEGER,
-        blood_group TEXT,
-        city TEXT,
-        phone TEXT,
-        lat REAL,
-        lng REAL
-    )
-    """)
-
-    conn.commit()
-    conn.close()
-
-init_db()
-
-
-# ================= REGISTER DONOR =================
-
-@app.route("/register", methods=["POST"])
+@app.route("/register",methods=["POST"])
 def register():
 
-    data = request.json
+    data=request.json
 
-    conn = sqlite3.connect(DATABASE)
-    cur = conn.cursor()
+    conn=sqlite3.connect("bloodconnect.db")
+    cur=conn.cursor()
 
-    cur.execute("""
-    INSERT INTO donors(name,age,blood_group,city,phone,lat,lng)
-    VALUES(?,?,?,?,?,?,?)
-    """, (
-        data["name"],
-        data["age"],
-        data["blood_group"],
-        data["city"],
-        data["phone"],
-        data.get("lat",None),
-        data.get("lng",None)
-    ))
+    cur.execute("INSERT INTO donors(name,blood_group,city,phone) VALUES(?,?,?,?)",
+                (data["name"],data["blood_group"],data["city"],data["phone"]))
 
     conn.commit()
     conn.close()
@@ -62,51 +23,53 @@ def register():
     return jsonify({"message":"Donor registered"})
 
 
-# ================= SEARCH DONORS =================
+@app.route("/login",methods=["POST"])
+def login():
+
+    data=request.json
+
+    conn=sqlite3.connect("bloodconnect.db")
+    cur=conn.cursor()
+
+    cur.execute("SELECT * FROM donors WHERE phone=?",(data["phone"],))
+
+    user=cur.fetchone()
+
+    conn.close()
+
+    if user:
+        return jsonify({"message":"Login successful"})
+    else:
+        return jsonify({"message":"User not found"})
+
 
 @app.route("/search")
 def search():
 
-    blood = request.args.get("blood")
-    city = request.args.get("city")
+    blood=request.args.get("blood")
+    city=request.args.get("city")
 
-    conn = sqlite3.connect(DATABASE)
-    cur = conn.cursor()
+    conn=sqlite3.connect("bloodconnect.db")
+    cur=conn.cursor()
 
-    query = "SELECT name,blood_group,city,phone,lat,lng FROM donors WHERE 1=1"
-    params = []
+    cur.execute("SELECT name,blood_group,city,phone FROM donors WHERE blood_group=? AND city=?",(blood,city))
 
-    if blood:
-        query += " AND blood_group=?"
-        params.append(blood)
+    rows=cur.fetchall()
 
-    if city:
-        query += " AND city LIKE ?"
-        params.append("%"+city+"%")
+    conn.close()
 
-    cur.execute(query,params)
-
-    rows = cur.fetchall()
-
-    donors = []
+    donors=[]
 
     for r in rows:
 
         donors.append({
-            "name":r[0],
-            "blood_group":r[1],
-            "city":r[2],
-            "phone":r[3],
-            "lat":r[4],
-            "lng":r[5]
+        "name":r[0],
+        "blood_group":r[1],
+        "city":r[2],
+        "phone":r[3]
         })
-
-    conn.close()
 
     return jsonify(donors)
 
 
-# ================= SERVER =================
-
-if __name__ == "__main__":
-    app.run(debug=True)
+app.run(debug=True)
